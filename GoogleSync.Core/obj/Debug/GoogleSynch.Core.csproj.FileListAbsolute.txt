@@ -1,0 +1,15 @@
+C:\Users\dirk.sarodnick\Documents\Visual Studio 2010\Projects\GoogleSync\GoogleSynch.Core\obj\Debug\ResolveAssemblyReference.cache
+C:\Users\dirk.sarodnick\Documents\Visual Studio 2010\Projects\GoogleSync\GoogleSynch.Core\bin\Debug\GoogleSynch.Core.dll
+C:\Users\dirk.sarodnick\Documents\Visual Studio 2010\Projects\GoogleSync\GoogleSynch.Core\bin\Debug\GoogleSynch.Core.pdb
+C:\Users\dirk.sarodnick\Documents\Visual Studio 2010\Projects\GoogleSync\GoogleSynch.Core\bin\Debug\Google.GData.Calendar.dll
+C:\Users\dirk.sarodnick\Documents\Visual Studio 2010\Projects\GoogleSync\GoogleSynch.Core\bin\Debug\Google.GData.Client.dll
+C:\Users\dirk.sarodnick\Documents\Visual Studio 2010\Projects\GoogleSync\GoogleSynch.Core\bin\Debug\Google.GData.Contacts.dll
+C:\Users\dirk.sarodnick\Documents\Visual Studio 2010\Projects\GoogleSync\GoogleSynch.Core\bin\Debug\Google.GData.Extensions.dll
+C:\Users\dirk.sarodnick\Documents\Visual Studio 2010\Projects\GoogleSync\GoogleSynch.Core\bin\Debug\Google.GData.Photos.dll
+C:\Users\dirk.sarodnick\Documents\Visual Studio 2010\Projects\GoogleSync\GoogleSynch.Core\bin\Debug\Google.GData.AccessControl.dll
+C:\Users\dirk.sarodnick\Documents\Visual Studio 2010\Projects\GoogleSync\GoogleSynch.Core\obj\Debug\GoogleSynch.Core.dll
+C:\Users\dirk.sarodnick\Documents\Visual Studio 2010\Projects\GoogleSync\GoogleSynch.Core\obj\Debug\GoogleSynch.Core.pdb
+C:\Users\dirk.sarodnick\Documents\Visual Studio 2010\Projects\GoogleSync\GoogleSynch.Core\bin\Debug\Microsoft.Office.Tools.Outlook.v4.0.Utilities.dll
+C:\Users\dirk.sarodnick\Documents\Visual Studio 2010\Projects\GoogleSync\GoogleSynch.Core\bin\Debug\Microsoft.Office.Tools.Common.v4.0.Utilities.dll
+C:\Users\dirk.sarodnick\Documents\Visual Studio 2010\Projects\GoogleSync\GoogleSynch.Core\bin\Debug\Microsoft.Office.Tools.Outlook.v4.0.Utilities.xml
+C:\Users\dirk.sarodnick\Documents\Visual Studio 2010\Projects\GoogleSync\GoogleSynch.Core\bin\Debug\Microsoft.Office.Tools.Common.v4.0.Utilities.xml

@@ -1,0 +1,14 @@
+c:\users\dirk.sarodnick\documents\visual studio 2010\Projects\GoogleSync\GoogleSync\bin\Debug\GoogleSync.dll
+c:\users\dirk.sarodnick\documents\visual studio 2010\Projects\GoogleSync\GoogleSync\bin\Debug\GoogleSync.pdb
+c:\users\dirk.sarodnick\documents\visual studio 2010\Projects\GoogleSync\GoogleSync\bin\Debug\GoogleSync.dll.manifest
+c:\users\dirk.sarodnick\documents\visual studio 2010\Projects\GoogleSync\GoogleSync\bin\Debug\GoogleSync.vsto
+c:\users\dirk.sarodnick\documents\visual studio 2010\Projects\GoogleSync\GoogleSync\bin\Debug\Microsoft.Office.Tools.Common.v4.0.Utilities.dll
+c:\users\dirk.sarodnick\documents\visual studio 2010\Projects\GoogleSync\GoogleSync\bin\Debug\Microsoft.Office.Tools.Outlook.v4.0.Utilities.dll
+c:\users\dirk.sarodnick\documents\visual studio 2010\Projects\GoogleSync\GoogleSync\bin\Debug\Microsoft.Office.Tools.Common.v4.0.Utilities.xml
+c:\users\dirk.sarodnick\documents\visual studio 2010\Projects\GoogleSync\GoogleSync\bin\Debug\Microsoft.Office.Tools.Outlook.v4.0.Utilities.xml
+c:\users\dirk.sarodnick\documents\visual studio 2010\Projects\GoogleSync\GoogleSync\obj\Debug\ResolveAssemblyReference.cache
+c:\users\dirk.sarodnick\documents\visual studio 2010\Projects\GoogleSync\GoogleSync\obj\Debug\GoogleSync.Properties.Resources.resources
+c:\users\dirk.sarodnick\documents\visual studio 2010\Projects\GoogleSync\GoogleSync\obj\Debug\GenerateResource.read.1.tlog
+c:\users\dirk.sarodnick\documents\visual studio 2010\Projects\GoogleSync\GoogleSync\obj\Debug\GenerateResource.write.1.tlog
+c:\users\dirk.sarodnick\documents\visual studio 2010\Projects\GoogleSync\GoogleSync\obj\Debug\GoogleSync.dll
+c:\users\dirk.sarodnick\documents\visual studio 2010\Projects\GoogleSync\GoogleSync\obj\Debug\GoogleSync.pdb

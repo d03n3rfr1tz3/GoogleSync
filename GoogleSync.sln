@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoogleSync.Addin", "GoogleSync.Addin\GoogleSync.Addin.csproj", "{3C4E79C9-B8C7-44B6-9339-36790A9F30CC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoogleSync.Core", "GoogleSync.Core\GoogleSync.Core.csproj", "{7D85187F-07CA-43C8-B2CA-F1ACA48CD68E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3C4E79C9-B8C7-44B6-9339-36790A9F30CC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3C4E79C9-B8C7-44B6-9339-36790A9F30CC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3C4E79C9-B8C7-44B6-9339-36790A9F30CC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3C4E79C9-B8C7-44B6-9339-36790A9F30CC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7D85187F-07CA-43C8-B2CA-F1ACA48CD68E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7D85187F-07CA-43C8-B2CA-F1ACA48CD68E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7D85187F-07CA-43C8-B2CA-F1ACA48CD68E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7D85187F-07CA-43C8-B2CA-F1ACA48CD68E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

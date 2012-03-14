@@ -25,3 +25,9 @@ obj/
 [Rr]elease*/
 _ReSharper*/
 [Tt]est[Rr]esult*
+*.suo
+/GoogleSync.Addin/bin
+/GoogleSync.Addin/obj
+/GoogleSync.Core/bin
+/GoogleSync.Core/obj
+/Publish

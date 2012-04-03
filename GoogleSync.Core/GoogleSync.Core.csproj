@@ -102,8 +102,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Sync\Calendar\CalendarSyncManager.cs" />
     <Compile Include="Sync\Contacts\ContactSyncManager.cs" />
-    <Compile Include="Sync\ISynch.cs" />
-    <Compile Include="Sync\SynchBase.cs" />
+    <Compile Include="Sync\ISync.cs" />
+    <Compile Include="Sync\SyncBase.cs" />
     <Compile Include="Sync\SyncManager.cs" />
   </ItemGroup>
   <ItemGroup>

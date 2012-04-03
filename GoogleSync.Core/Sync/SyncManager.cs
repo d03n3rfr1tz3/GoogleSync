@@ -61,8 +61,7 @@ namespace DirkSarodnick.GoogleSync.Core.Sync
                 catch (Exception ex)
                 {
                     Debug.Write(ex.Message);
-                    var eventLogPermission = new EventLogPermission(EventLogPermissionAccess.Administer, ".");
-                    eventLogPermission.PermitOnly();
+                    new EventLogPermission(EventLogPermissionAccess.Administer, ".").PermitOnly();
                     EventLog.WriteEntry("GoogleSync Addin", ex.ToString(), EventLogEntryType.Warning);
                 }
             });

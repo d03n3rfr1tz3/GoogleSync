@@ -5,6 +5,8 @@ namespace DirkSarodnick.GoogleSync.Core.Sync
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
+    using Calendar;
+    using Contacts;
     using Data;
 
     /// <summary>

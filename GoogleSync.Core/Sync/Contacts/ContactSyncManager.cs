@@ -1,8 +1,7 @@
 ﻿
-namespace DirkSarodnick.GoogleSync.Core.Sync
+namespace DirkSarodnick.GoogleSync.Core.Sync.Contacts
 {
     using System.Collections.Generic;
-    using System.Diagnostics;
     using System.Linq;
     using Data;
     using Extensions;
@@ -71,13 +70,13 @@ namespace DirkSarodnick.GoogleSync.Core.Sync
         private void SyncGoogleToOutlook()
         {
             var googleContacts = ApplicationData.IncludeContactWithoutEmail
-                                     ? this.Repository.GoogleData.GetContacts()
+                                     ? this.Repository.GoogleData.GetContacts().ToList()
                                      : this.Repository.GoogleData.GetContacts().Where(c => c.Emails.Any()).ToList();
             var outlookContacts = this.Repository.OutlookData.GetContacts().ToList();
 
             foreach (var googleContact in googleContacts)
             {
-                var mergeables = outlookContacts.Mergeable(googleContact);
+                var mergeables = outlookContacts.Mergeable(googleContact).ToList();
 
                 // continue with next, if modificationdate is older then other side.
                 if (ApplicationData.ContactBehavior == ContactBehavior.Automatic && mergeables.Any() &&
@@ -104,8 +103,7 @@ namespace DirkSarodnick.GoogleSync.Core.Sync
                     changed |= outlookContact.UserProperties.SetProperty("GooglePicture", googleContact.PhotoEtag);
                 }
 
-                if (changed)
-                    outlookContact.Save();
+                if (changed) outlookContact.Save();
             }
         }
 
@@ -115,7 +113,7 @@ namespace DirkSarodnick.GoogleSync.Core.Sync
         private void SyncOutlookToGoogle()
         {
             var googleContacts = ApplicationData.IncludeContactWithoutEmail
-                                     ? this.Repository.GoogleData.GetContacts()
+                                     ? this.Repository.GoogleData.GetContacts().ToList()
                                      : this.Repository.GoogleData.GetContacts().Where(c => c.Emails.Any()).ToList();
             var outlookContacts = this.Repository.OutlookData.GetContacts().ToList();
 
@@ -132,7 +130,7 @@ namespace DirkSarodnick.GoogleSync.Core.Sync
         /// <param name="googleContacts">The google contacts.</param>
         private void SyncOutlookContact(ContactItem outlookContact, IEnumerable<Contact> googleContacts)
         {
-            var mergeables = googleContacts.Mergeable(outlookContact);
+            var mergeables = googleContacts.Mergeable(outlookContact).ToList();
 
             // continue with next, if modificationdate is older then other side.
             if (ApplicationData.ContactBehavior == ContactBehavior.Automatic && mergeables.Any() &&
@@ -165,8 +163,7 @@ namespace DirkSarodnick.GoogleSync.Core.Sync
                 outlookChanged |= outlookContact.UserProperties.SetProperty("GooglePicture", googleContact.PhotoEtag);
             }
 
-            if (outlookChanged)
-                outlookContact.Save();
+            if (outlookChanged) outlookContact.Save();
         }
     }
 }

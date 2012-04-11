@@ -2,6 +2,7 @@
 namespace DirkSarodnick.GoogleSync.Core.Data
 {
     using System;
+    using System.Globalization;
     using System.Linq;
     using Google.GData.Contacts;
     using Microsoft.Office.Interop.Outlook;
@@ -69,12 +70,12 @@ namespace DirkSarodnick.GoogleSync.Core.Data
         {
             get
             {
-                return Storage.GetProperty("IncludeContactWithoutEmail") == true.ToString();
+                return Storage.GetProperty("IncludeContactWithoutEmail") == true.ToString(CultureInfo.InvariantCulture);
             }
 
             set
             {
-                Storage.SetProperty("IncludeContactWithoutEmail", value.ToString());
+                Storage.SetProperty("IncludeContactWithoutEmail", value.ToString(CultureInfo.InvariantCulture));
             }
         }
 
@@ -94,7 +95,7 @@ namespace DirkSarodnick.GoogleSync.Core.Data
                     return behavior;
                 }
 
-                return Data.ContactBehavior.Automatic;
+                return ContactBehavior.Automatic;
             }
 
             set

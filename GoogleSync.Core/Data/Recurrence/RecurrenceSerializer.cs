@@ -1,12 +1,12 @@
 ﻿
-using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Text.RegularExpressions;
-using Microsoft.Office.Interop.Outlook;
-
 namespace DirkSarodnick.GoogleSync.Core.Data.Recurrence
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Globalization;
+    using System.Text.RegularExpressions;
+    using Microsoft.Office.Interop.Outlook;
+
     /// <summary>
     /// Defines the RecurrenceSerializer class.
     /// </summary>

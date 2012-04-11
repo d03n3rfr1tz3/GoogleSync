@@ -42,8 +42,11 @@ namespace DirkSarodnick.GoogleSync.Core.Extensions
         /// </summary>
         /// <param name="outlookContact">The outlook contact.</param>
         /// <param name="googleContact">The google contact.</param>
-        /// <returns>True if Changed.</returns>
-        public static bool MergeWith(this ContactItem outlookContact, Contact googleContact, IEnumerable<Group> groups)
+        /// <param name="outlookGroups">The outlook groups.</param>
+        /// <returns>
+        /// True if Changed.
+        /// </returns>
+        public static bool MergeWith(this ContactItem outlookContact, Contact googleContact, IEnumerable<Group> outlookGroups)
         {
             var result = false;
 
@@ -94,7 +97,7 @@ namespace DirkSarodnick.GoogleSync.Core.Extensions
             result |= outlookContact.ApplyProperty(c => c.Profession, organization.Title);
 
             // Syncing Groups/Categories
-            var contactGroups = googleContact.GroupMembership.Select(g => groups.FirstOrInstance(m => m.Id == g.HRef));
+            var contactGroups = googleContact.GroupMembership.Select(g => outlookGroups.FirstOrInstance(m => m.Id == g.HRef));
             result |= outlookContact.ApplyProperty(c => c.Categories, string.Join("; ", contactGroups.Select(g => (string.IsNullOrEmpty(g.SystemGroup) ? g.Title : g.SystemGroup))));
 
             return result;
@@ -125,7 +128,7 @@ namespace DirkSarodnick.GoogleSync.Core.Extensions
             var attachment = outlookContact.Attachments.Cast<Attachment>().FirstOrDefault(a => a.FileName == "ContactPicture.jpg");
             if (attachment != null)
             {
-                outlookContact.UserProperties.SetProperty("GooglePictureSize", attachment.Size.ToString());
+                outlookContact.UserProperties.SetProperty("GooglePictureSize", attachment.Size.ToString(CultureInfo.InvariantCulture));
             }
 
             return true;
@@ -189,7 +192,10 @@ namespace DirkSarodnick.GoogleSync.Core.Extensions
         /// </summary>
         /// <param name="googleContact">The google contact.</param>
         /// <param name="outlookContact">The outlook contact.</param>
-        /// <returns>True if Changed.</returns>
+        /// <param name="googleGroups">The google groups.</param>
+        /// <returns>
+        /// True if Changed.
+        /// </returns>
         public static bool MergeWith(this Contact googleContact, ContactItem outlookContact, IEnumerable<Group> googleGroups)
         {
             var result = false;
@@ -260,7 +266,7 @@ namespace DirkSarodnick.GoogleSync.Core.Extensions
             var attachment = outlookContact.Attachments.Cast<Attachment>().FirstOrDefault(a => a.FileName == "ContactPicture.jpg");
             if (attachment != null)
             {
-                outlookContact.UserProperties.SetProperty("GooglePictureSize", attachment.Size.ToString());
+                outlookContact.UserProperties.SetProperty("GooglePictureSize", attachment.Size.ToString(CultureInfo.InvariantCulture));
                 attachment.SaveAsFile(imagePath);
 
                 var tempStream = new FileStream(imagePath, FileMode.Open);
@@ -286,9 +292,9 @@ namespace DirkSarodnick.GoogleSync.Core.Extensions
             {
                 emails.Add(mail);
 
-                if (!emails.Any(e => e.Primary))
+                if (emails.Any() && !emails.Any(e => e.Primary))
                 {
-                    emails.FirstOrDefault().Primary = true;
+                    emails.First().Primary = true;
                 }
 
                 return true;
@@ -309,9 +315,9 @@ namespace DirkSarodnick.GoogleSync.Core.Extensions
             {
                 ims.Add(im);
 
-                if (!ims.Any(e => e.Primary))
+                if (ims.Any() && !ims.Any(e => e.Primary))
                 {
-                    ims.FirstOrDefault().Primary = true;
+                    ims.First().Primary = true;
                 }
 
                 return true;
@@ -332,9 +338,9 @@ namespace DirkSarodnick.GoogleSync.Core.Extensions
             {
                 websites.Add(website);
 
-                if (!websites.Any(e => e.Primary))
+                if (websites.Any() && !websites.Any(e => e.Primary))
                 {
-                    websites.FirstOrDefault().Primary = true;
+                    websites.First().Primary = true;
                 }
 
                 return true;
@@ -355,7 +361,7 @@ namespace DirkSarodnick.GoogleSync.Core.Extensions
             {
                 var result = false;
 
-                if(organizations.Any(e => e.Name == organization.Name))
+                if (organizations.Any(e => e.Name == organization.Name))
                 {
                     var org = organizations.First(e => e.Name == organization.Name);
                     result |= org.ApplyProperty(o => o.Department, organization.Department);
@@ -364,12 +370,12 @@ namespace DirkSarodnick.GoogleSync.Core.Extensions
                 else
                 {
                     organizations.Add(organization);
-                    result |= true;
+                    result = true;
                 }
 
-                if (!organizations.Any(e => e.Primary))
+                if (organizations.Any() && !organizations.Any(e => e.Primary))
                 {
-                    organizations.FirstOrDefault().Primary = true;
+                    organizations.First().Primary = true;
                 }
 
                 return result;
@@ -426,14 +432,7 @@ namespace DirkSarodnick.GoogleSync.Core.Extensions
         /// </returns>
         public static bool Merge(this ExtensionCollection<GroupMembership> groups, IEnumerable<string> outlookGroups, IEnumerable<Group> googleGroups)
         {
-            var result = false;
-
-            foreach (var outlookGroup in outlookGroups)
-            {
-                result |= groups.Merge(outlookGroup, googleGroups);
-            }
-
-            return result;
+            return outlookGroups.Aggregate(false, (current, outlookGroup) => current | Merge(groups, outlookGroup, googleGroups));
         }
 
         /// <summary>
@@ -475,7 +474,7 @@ namespace DirkSarodnick.GoogleSync.Core.Extensions
             if (contact.HasPicture)
             {
                 var attachment = contact.Attachments.Cast<Attachment>().FirstOrDefault(a => a.FileName == "ContactPicture.jpg");
-                return attachment.Size.ToString() != contact.UserProperties.GetProperty("GooglePictureSize");
+                return attachment != null && attachment.Size.ToString(CultureInfo.InvariantCulture) != contact.UserProperties.GetProperty("GooglePictureSize");
             }
 
             return false;

@@ -1,7 +1,7 @@
 ﻿
 namespace DirkSarodnick.GoogleSync.Core.Sync
 {
-    using GoogleSync.Core.Data;
+    using Data;
 
     /// <summary>
     /// Defines the SyncBase class.
@@ -12,7 +12,7 @@ namespace DirkSarodnick.GoogleSync.Core.Sync
         /// Initializes a new instance of the <see cref="SyncBase"/> class.
         /// </summary>
         /// <param name="repository">The repository.</param>
-        public SyncBase(DataRepository repository)
+        protected SyncBase(DataRepository repository)
         {
             this.Repository = repository;
         }

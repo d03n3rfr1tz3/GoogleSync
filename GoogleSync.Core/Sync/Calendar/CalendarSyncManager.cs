@@ -1,8 +1,7 @@
 ﻿
-namespace DirkSarodnick.GoogleSync.Core.Sync
+namespace DirkSarodnick.GoogleSync.Core.Sync.Calendar
 {
     using System.Collections.Generic;
-    using System.Diagnostics;
     using System.Linq;
     using Data;
     using Extensions;
@@ -68,18 +67,17 @@ namespace DirkSarodnick.GoogleSync.Core.Sync
         /// </summary>
         private void SyncGoogleToOutlook()
         {
-            var googleCalendarItems = this.Repository.GoogleData.GetCalendarItems();
-            var outlookCalendarItems = this.Repository.OutlookData.GetCalendarItems();
+            var googleCalendarItems = this.Repository.GoogleData.GetCalendarItems().ToList();
+            var outlookCalendarItems = this.Repository.OutlookData.GetCalendarItems().ToList();
 
             foreach (var googleCalendarItem in googleCalendarItems)
             {
-                var mergeables = outlookCalendarItems.Mergeable(googleCalendarItem);
+                var mergeables = outlookCalendarItems.Mergeable(googleCalendarItem).ToList();
 
                 var outlookCalendarItem = mergeables.Any() ? mergeables.First() : ApplicationData.Application.CreateItem(OlItemType.olAppointmentItem) as AppointmentItem;
                 var changed = outlookCalendarItem.MergeWith(googleCalendarItem);
                 changed |= outlookCalendarItem.UserProperties.SetProperty("GoogleId", googleCalendarItem.EventId);
-                if (changed)
-                    outlookCalendarItem.Save();
+                if (changed) outlookCalendarItem.Save();
             }
         }
 
@@ -88,8 +86,8 @@ namespace DirkSarodnick.GoogleSync.Core.Sync
         /// </summary>
         private void SyncOutlookToGoogle()
         {
-            var googleCalendarItems = this.Repository.GoogleData.GetCalendarItems();
-            var outlookCalendarItems = this.Repository.OutlookData.GetCalendarItems();
+            var googleCalendarItems = this.Repository.GoogleData.GetCalendarItems().ToList();
+            var outlookCalendarItems = this.Repository.OutlookData.GetCalendarItems().ToList();
 
             foreach (var outlookCalendarItem in outlookCalendarItems)
             {
@@ -104,22 +102,20 @@ namespace DirkSarodnick.GoogleSync.Core.Sync
         /// <param name="googleCalendarItems">The google calendar items.</param>
         private void SyncOutlookCalendarItem(AppointmentItem outlookCalendarItem, IEnumerable<EventEntry> googleCalendarItems)
         {
-            var mergeables = googleCalendarItems.Mergeable(outlookCalendarItem);
+            var mergeables = googleCalendarItems.Mergeable(outlookCalendarItem).ToList();
 
             EventEntry googleCalendarItem;
             if (mergeables.Any())
             {
                 googleCalendarItem = mergeables.First();
                 var changed = googleCalendarItem.MergeWith(outlookCalendarItem);
-                if (changed)
-                    this.Repository.GoogleData.CalendarService.Update(googleCalendarItem);
+                if (changed) this.Repository.GoogleData.CalendarService.Update(googleCalendarItem);
             }
             else
             {
                 googleCalendarItem = new EventEntry();
                 var changed = googleCalendarItem.MergeWith(outlookCalendarItem);
-                if (changed)
-                    googleCalendarItem = this.Repository.GoogleData.CalendarService.Insert(ApplicationData.GoogleCalendarUri, googleCalendarItem);
+                if (changed) googleCalendarItem = this.Repository.GoogleData.CalendarService.Insert(ApplicationData.GoogleCalendarUri, googleCalendarItem);
             }
 
             var outlookChanged = outlookCalendarItem.UserProperties.SetProperty("GoogleId", googleCalendarItem.EventId);

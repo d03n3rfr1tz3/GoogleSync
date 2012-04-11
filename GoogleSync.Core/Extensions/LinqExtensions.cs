@@ -17,16 +17,9 @@ namespace DirkSarodnick.GoogleSync.Core.Extensions
         /// <param name="enumerable">The enumerable.</param>
         /// <returns>The First Element or a new Instance of same type.</returns>
         public static T FirstOrInstance<T>(this IEnumerable<T> enumerable)
-            where T : new()
+            where T : class, new()
         {
-            var element = enumerable.FirstOrDefault();
-
-            if (element == null)
-            {
-                element = new T();
-            }
-
-            return element;
+            return enumerable.FirstOrDefault() ?? new T();
         }
 
         /// <summary>
@@ -37,16 +30,9 @@ namespace DirkSarodnick.GoogleSync.Core.Extensions
         /// <param name="predicate">The predicate.</param>
         /// <returns>The First Element or a new Instance of same type.</returns>
         public static T FirstOrInstance<T>(this IEnumerable<T> enumerable, Func<T, bool> predicate)
-            where T : new()
+            where T : class, new()
         {
-            var element = enumerable.FirstOrDefault(predicate);
-
-            if (element == null)
-            {
-                element = new T();
-            }
-
-            return element;
+            return enumerable.FirstOrDefault(predicate) ?? new T();
         }
     }
 }

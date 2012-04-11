@@ -1,11 +1,10 @@
 ﻿
-using System.Reflection;
-
 namespace DirkSarodnick.GoogleSync.Core.Extensions
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Reflection;
     using Data;
     using Data.Recurrence;
     using Google.GData.Calendar;
@@ -101,8 +100,8 @@ namespace DirkSarodnick.GoogleSync.Core.Extensions
         public static bool MergeRecipients(this AppointmentItem outlookCalendarItem, IEnumerable<Who> googleParticipants)
         {
             var result = false;
-            var recipients = outlookCalendarItem.Recipients.Cast<Recipient>().Where(r => r.Address != null);
-            var participants = googleParticipants.Where(p => p.Rel != Who.RelType.EVENT_ORGANIZER);
+            var recipients = outlookCalendarItem.Recipients.Cast<Recipient>().Where(r => r.Address != null).ToList();
+            var participants = googleParticipants.Where(p => p.Rel != Who.RelType.EVENT_ORGANIZER).ToList();
 
             foreach (var participant in participants)
             {
@@ -111,7 +110,7 @@ namespace DirkSarodnick.GoogleSync.Core.Extensions
                     var recipient = outlookCalendarItem.Recipients.Add(participant.Email);
                     recipient.Type = (int)participant.Attendee_Type.GetRecipientType();
                     outlookCalendarItem.MeetingStatus = OlMeetingStatus.olMeeting;
-                    result |= true;
+                    result = true;
                 }
             }
 
@@ -120,7 +119,7 @@ namespace DirkSarodnick.GoogleSync.Core.Extensions
                 if (!participants.Any(p => p.Email == (recipient.Address ?? recipient.Name)))
                 {
                     outlookCalendarItem.Recipients.Remove(recipient.Index);
-                    result |= true;
+                    result = true;
                 }
             }
 

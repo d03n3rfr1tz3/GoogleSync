@@ -3,7 +3,7 @@ namespace DirkSarodnick.GoogleSync.Addin
 {
     using System;
     using System.Windows.Forms;
-    using DirkSarodnick.GoogleSync.Core.Data;
+    using Core.Data;
 
     /// <summary>
     /// Defines the SyncOptionsForm class.

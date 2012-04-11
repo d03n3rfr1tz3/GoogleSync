@@ -1,4 +1,5 @@
-﻿namespace DirkSarodnick.GoogleSync.Core.Data
+﻿
+namespace DirkSarodnick.GoogleSync.Core.Data
 {
     using System.Collections.Generic;
     using System.Linq;

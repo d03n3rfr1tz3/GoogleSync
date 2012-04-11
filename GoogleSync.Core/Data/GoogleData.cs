@@ -7,7 +7,6 @@ namespace DirkSarodnick.GoogleSync.Core.Data
     using Google.Contacts;
     using Google.GData.Calendar;
     using Google.GData.Client;
-    using Google.GData.Contacts;
 
     /// <summary>
     /// Defines the GoogleData class.

@@ -25,8 +25,8 @@ namespace DirkSarodnick.GoogleSync.Core.Extensions
             var propertyValue = expression.Compile()(baseObject);
             var equals = Equals(propertyValue, value);
 
-            var propertyString = propertyValue == null ? string.Empty : propertyValue.ToString();
-            var valueString = value == null ? string.Empty : value.ToString();
+            var propertyString = Equals(propertyValue, default(TValue)) ? string.Empty : propertyValue.ToString();
+            var valueString = Equals(value, default(TValue)) ? string.Empty : value.ToString();
 
             if (string.IsNullOrWhiteSpace(propertyString) && string.IsNullOrWhiteSpace(valueString))
             {

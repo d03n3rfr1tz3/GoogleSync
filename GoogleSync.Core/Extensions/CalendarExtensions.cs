@@ -25,7 +25,7 @@ namespace DirkSarodnick.GoogleSync.Core.Extensions
         public static bool Mergeable(AppointmentItem outlookCalendarItem, EventEntry googleCalendarItem)
         {
             return outlookCalendarItem.UserProperties.GetProperty("GoogleId") == googleCalendarItem.EventId ||
-                   (outlookCalendarItem.Subject == googleCalendarItem.Title.Text && googleCalendarItem.Locations.Any(l => l.ValueString == outlookCalendarItem.Location)) ||
+                   (outlookCalendarItem.Subject.FormatSimple() == googleCalendarItem.Title.Text.FormatSimple() && outlookCalendarItem.Body.FormatSimple() == googleCalendarItem.Content.Content.FormatSimple()) ||
                    googleCalendarItem.Times.Any(g => g.StartTime == outlookCalendarItem.Start && g.EndTime == outlookCalendarItem.End);
         }
 

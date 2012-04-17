@@ -3,9 +3,11 @@ namespace DirkSarodnick.GoogleSync.Core.Sync.Calendar
 {
     using System.Collections.Generic;
     using System.Linq;
+    using System.Net;
     using Data;
     using Extensions;
     using Google.GData.Calendar;
+    using Google.GData.Client;
     using Microsoft.Office.Interop.Outlook;
 
     /// <summary>
@@ -109,7 +111,20 @@ namespace DirkSarodnick.GoogleSync.Core.Sync.Calendar
             {
                 googleCalendarItem = mergeables.First();
                 var changed = googleCalendarItem.MergeWith(outlookCalendarItem);
-                if (changed) this.Repository.GoogleData.CalendarService.Update(googleCalendarItem);
+
+                try
+                {
+                    if (changed) this.Repository.GoogleData.CalendarService.Update(googleCalendarItem);
+                }
+                catch (GDataRequestException ex)
+                {
+                    var response = ex.Response as HttpWebResponse;
+                    if (response != null && response.StatusCode != HttpStatusCode.Conflict)
+                    {
+                        // TODO: Add functionality to resolve update conflict.
+                        throw;
+                    }
+                }
             }
             else
             {

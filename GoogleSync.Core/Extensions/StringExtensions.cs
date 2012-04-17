@@ -4,6 +4,7 @@ namespace DirkSarodnick.GoogleSync.Core.Extensions
     using System;
     using System.Linq.Expressions;
     using System.Reflection;
+    using System.Text.RegularExpressions;
 
     /// <summary>
     /// Defines the String Extensions.
@@ -44,6 +45,21 @@ namespace DirkSarodnick.GoogleSync.Core.Extensions
         }
 
         /// <summary>
+        /// Formats the value simpler, cause there are sometimes string.Empty strings compared against googles preferable nulls.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <returns></returns>
+        public static string FormatSimple(this string value)
+        {
+            if (string.IsNullOrEmpty(value))
+            {
+                return null;
+            }
+
+            return value;
+        }
+
+        /// <summary>
         /// Formats the phone.
         /// </summary>
         /// <param name="value">The value.</param>
@@ -55,7 +71,22 @@ namespace DirkSarodnick.GoogleSync.Core.Extensions
                 return null;
             }
 
-            return value.Replace(@"+", @" +");
+            return string.Concat(" ", value);
+        }
+
+        /// <summary>
+        /// Formats the phone as clean numbers.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <returns></returns>
+        public static string FormatPhoneClean(this string value)
+        {
+            if (string.IsNullOrWhiteSpace(value))
+            {
+                return null;
+            }
+
+            return new Regex(@"\D", RegexOptions.CultureInvariant).Replace(value, string.Empty);
         }
     }
 }

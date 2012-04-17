@@ -2,6 +2,8 @@
 namespace DirkSarodnick.GoogleSync.Core.Sync.Contacts
 {
     using System.Collections.Generic;
+    using System.Diagnostics;
+    using System.IO;
     using System.Linq;
     using Data;
     using Extensions;
@@ -158,9 +160,18 @@ namespace DirkSarodnick.GoogleSync.Core.Sync.Contacts
             var outlookChanged = outlookContact.UserProperties.SetProperty("GoogleId", googleContact.Id);
             if (ApplicationData.ContactBehavior != ContactBehavior.GoogleOverOutlook && outlookContact.HasNewPicture())
             {
-                this.Repository.GoogleData.ContactsRequest.SetPhoto(googleContact, outlookContact.GetPicture(), "image/jpg");
-                googleContact = this.Repository.GoogleData.ContactsRequest.Retrieve(googleContact);
-                outlookChanged |= outlookContact.UserProperties.SetProperty("GooglePicture", googleContact.PhotoEtag);
+                try
+                {
+                    this.Repository.GoogleData.ContactsRequest.SetPhoto(googleContact, outlookContact.GetPicture(), "image/jpg");
+                    googleContact = this.Repository.GoogleData.ContactsRequest.Retrieve(googleContact);
+                    outlookChanged |= outlookContact.UserProperties.SetProperty("GooglePicture", googleContact.PhotoEtag);
+                }
+                catch (IOException ex)
+                {
+                    Debug.Write(ex.Message);
+                    new EventLogPermission(EventLogPermissionAccess.Administer, ".").PermitOnly();
+                    EventLog.WriteEntry("GoogleSync Addin", ex.ToString(), EventLogEntryType.Warning);
+                }
             }
 
             if (outlookChanged) outlookContact.Save();

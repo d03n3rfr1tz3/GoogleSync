@@ -33,11 +33,11 @@ namespace DirkSarodnick.GoogleSync.Core.Extensions
                    googleContact.Emails.Any(g => g.Address == outlookContact.Email1Address) ||
                    googleContact.Emails.Any(g => g.Address == outlookContact.Email2Address) ||
                    googleContact.Emails.Any(g => g.Address == outlookContact.Email3Address) ||
-                   (googleContact.Name.FullName == outlookContact.FullName && googleContact.Phonenumbers.Any(g => g.Value == outlookContact.BusinessTelephoneNumber)) ||
-                   (googleContact.Name.FullName == outlookContact.FullName && googleContact.Phonenumbers.Any(g => g.Value == outlookContact.Business2TelephoneNumber)) ||
-                   (googleContact.Name.FullName == outlookContact.FullName && googleContact.Phonenumbers.Any(g => g.Value == outlookContact.HomeTelephoneNumber)) ||
-                   (googleContact.Name.FullName == outlookContact.FullName && googleContact.Phonenumbers.Any(g => g.Value == outlookContact.Home2TelephoneNumber)) ||
-                   (googleContact.Name.FullName == outlookContact.FullName && googleContact.Phonenumbers.Any(g => g.Value == outlookContact.OtherTelephoneNumber));
+                   (googleContact.Name.FullName == outlookContact.FullName && googleContact.Phonenumbers.Any(g => g.Value.FormatPhoneClean() == outlookContact.BusinessTelephoneNumber.FormatPhoneClean())) ||
+                   (googleContact.Name.FullName == outlookContact.FullName && googleContact.Phonenumbers.Any(g => g.Value.FormatPhoneClean() == outlookContact.Business2TelephoneNumber.FormatPhoneClean())) ||
+                   (googleContact.Name.FullName == outlookContact.FullName && googleContact.Phonenumbers.Any(g => g.Value.FormatPhoneClean() == outlookContact.HomeTelephoneNumber.FormatPhoneClean())) ||
+                   (googleContact.Name.FullName == outlookContact.FullName && googleContact.Phonenumbers.Any(g => g.Value.FormatPhoneClean() == outlookContact.Home2TelephoneNumber.FormatPhoneClean())) ||
+                   (googleContact.Name.FullName == outlookContact.FullName && googleContact.Phonenumbers.Any(g => g.Value.FormatPhoneClean() == outlookContact.OtherTelephoneNumber.FormatPhoneClean()));
         }
 
         #region Google > Outlook
@@ -94,7 +94,7 @@ namespace DirkSarodnick.GoogleSync.Core.Extensions
             result |= outlookContact.ApplyProperty(c => c.MailingAddressState, primaryMailAddress.Region);
 
             DateTime birth;
-            if (DateTime.TryParseExact(googleContact.ContactEntry.Birthday, DateFormats, CultureInfo.InvariantCulture, DateTimeStyles.None, out birth))
+            if (DateTime.TryParseExact(googleContact.ContactEntry.Birthday, DateFormats, CultureInfo.InvariantCulture, DateTimeStyles.None, out birth) && birth.Year > 1000 && birth.Year < 2500)
             {
                 result |= outlookContact.ApplyProperty(c => c.Birthday, birth);
             }
@@ -246,7 +246,7 @@ namespace DirkSarodnick.GoogleSync.Core.Extensions
 
             if (outlookContact.Birthday != default(DateTime))
             {
-                var birth = outlookContact.Birthday.Year == default(DateTime).Year
+                var birth = outlookContact.Birthday.Year == default(DateTime).Year || outlookContact.Birthday.Year < 1000 || outlookContact.Birthday.Year > 2500
                                 ? outlookContact.Birthday.ToString(DateFormats[1], CultureInfo.InvariantCulture)
                                 : outlookContact.Birthday.ToString(DateFormats[0], CultureInfo.InvariantCulture);
                 result |= googleContact.ContactEntry.ApplyProperty(c => c.Birthday, birth);
@@ -265,7 +265,10 @@ namespace DirkSarodnick.GoogleSync.Core.Extensions
             result |= googleContact.ContactEntry.Organizations.Merge(new Organization { Name = outlookContact.CompanyName, Department = outlookContact.Department, Title = outlookContact.Profession, Rel = ContactsRelationships.IsWork });
 
             // Syncing Groups/Categories
-            result |= googleContact.GroupMembership.Merge(outlookContact.Categories.Split(';').Select(c => c.Trim()), googleGroups);
+            if (!string.IsNullOrEmpty(outlookContact.Categories))
+            {
+                result |= googleContact.GroupMembership.Merge(outlookContact.Categories.Split(';').Select(c => c.Trim()), googleGroups);
+            }
 
             return result;
         }
@@ -278,7 +281,9 @@ namespace DirkSarodnick.GoogleSync.Core.Extensions
         public static Stream GetPicture(this ContactItem outlookContact)
         {
             var stream = new MemoryStream();
-            var imagePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "/Temp/", string.Format("export_{0}", outlookContact.EntryID));
+            var imageDir = Environment.GetFolderPath(Environment.SpecialFolder.InternetCache, Environment.SpecialFolderOption.None);
+            var imagePath = Path.Combine(imageDir, string.Format("export_{0}", outlookContact.EntryID));
+            if (!Directory.Exists(imagePath)) Directory.CreateDirectory(imagePath);
 
             var attachment = outlookContact.Attachments.Cast<Attachment>().FirstOrDefault(a => a.FileName == "ContactPicture.jpg");
             if (attachment != null)
@@ -294,6 +299,7 @@ namespace DirkSarodnick.GoogleSync.Core.Extensions
 
                 stream.Seek(0, SeekOrigin.Begin);
             }
+
             return stream;
         }
 
@@ -428,7 +434,7 @@ namespace DirkSarodnick.GoogleSync.Core.Extensions
         /// <returns>True if Changed.</returns>
         public static bool Merge(this ExtensionCollection<PhoneNumber> phoneNumbers, PhoneNumber phone)
         {
-            if (!string.IsNullOrWhiteSpace(phone.Value) && !phoneNumbers.Any(e => e.Value == phone.Value))
+            if (!string.IsNullOrWhiteSpace(phone.Value) && !phoneNumbers.Any(e => e.Value.FormatPhoneClean() == phone.Value.FormatPhoneClean()))
             {
                 phoneNumbers.Add(phone);
 

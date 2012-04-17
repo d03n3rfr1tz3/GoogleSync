@@ -21,20 +21,38 @@ namespace DirkSarodnick.GoogleSync.Core.Extensions
     {
         private static readonly string[] DateFormats = new[] { @"yyyy-MM-dd", @"--MM-dd" };
 
+        /// <summary>
+        /// Determines wether the contacts are mergable.
+        /// </summary>
+        /// <param name="outlookContact">The outlook contact.</param>
+        /// <param name="googleContact">The google contact.</param>
+        /// <returns></returns>
+        public static bool Mergeable(ContactItem outlookContact, Contact googleContact)
+        {
+            return outlookContact.UserProperties.GetProperty("GoogleId") == googleContact.Id ||
+                   googleContact.Emails.Any(g => g.Address == outlookContact.Email1Address) ||
+                   googleContact.Emails.Any(g => g.Address == outlookContact.Email2Address) ||
+                   googleContact.Emails.Any(g => g.Address == outlookContact.Email3Address) ||
+                   (googleContact.Name.FullName == outlookContact.FullName && googleContact.Phonenumbers.Any(g => g.Value == outlookContact.BusinessTelephoneNumber)) ||
+                   (googleContact.Name.FullName == outlookContact.FullName && googleContact.Phonenumbers.Any(g => g.Value == outlookContact.Business2TelephoneNumber)) ||
+                   (googleContact.Name.FullName == outlookContact.FullName && googleContact.Phonenumbers.Any(g => g.Value == outlookContact.HomeTelephoneNumber)) ||
+                   (googleContact.Name.FullName == outlookContact.FullName && googleContact.Phonenumbers.Any(g => g.Value == outlookContact.Home2TelephoneNumber)) ||
+                   (googleContact.Name.FullName == outlookContact.FullName && googleContact.Phonenumbers.Any(g => g.Value == outlookContact.OtherTelephoneNumber));
+        }
+
         #region Google > Outlook
 
         /// <summary>
-        /// Mergeables the specified contacts.
+        /// Determines wether the contacts are mergable.
         /// </summary>
-        /// <param name="contacts">The contacts.</param>
-        /// <param name="contact">The contact.</param>
-        /// <returns>The mergeable Contacts.</returns>
-        public static IEnumerable<ContactItem> Mergeable(this IEnumerable<ContactItem> contacts, Contact contact)
+        /// <param name="outlookContacts">The outlook contacts.</param>
+        /// <param name="googleContact">The google contact.</param>
+        /// <returns>
+        /// The mergeable Contacts.
+        /// </returns>
+        public static IEnumerable<ContactItem> Mergeable(this IEnumerable<ContactItem> outlookContacts, Contact googleContact)
         {
-            return contacts.Where(c => c.UserProperties.GetProperty("GoogleId") == contact.Id ||
-                                       contact.Emails.Any(g => g.Address == c.Email1Address) ||
-                                       contact.Emails.Any(g => g.Address == c.Email2Address) ||
-                                       contact.Emails.Any(g => g.Address == c.Email3Address));
+            return outlookContacts.Where(c => Mergeable(c, googleContact));
         }
 
         /// <summary>
@@ -174,17 +192,16 @@ namespace DirkSarodnick.GoogleSync.Core.Extensions
         #region Outlook > Google
 
         /// <summary>
-        /// Mergeables the specified contacts.
+        /// Determines wether the contacts are mergable.
         /// </summary>
-        /// <param name="contacts">The contacts.</param>
-        /// <param name="contact">The contact.</param>
-        /// <returns>The mergeable Contacts.</returns>
-        public static IEnumerable<Contact> Mergeable(this IEnumerable<Contact> contacts, ContactItem contact)
+        /// <param name="googleContacts">The google contacts.</param>
+        /// <param name="outlookContact">The outlook contact.</param>
+        /// <returns>
+        /// The mergeable Contacts.
+        /// </returns>
+        public static IEnumerable<Contact> Mergeable(this IEnumerable<Contact> googleContacts, ContactItem outlookContact)
         {
-            return contacts.Where(c => contact.UserProperties.GetProperty("GoogleId") == c.Id ||
-                                       c.Emails.Any(g => g.Address == contact.Email1Address) ||
-                                       c.Emails.Any(g => g.Address == contact.Email2Address) ||
-                                       c.Emails.Any(g => g.Address == contact.Email3Address));
+            return googleContacts.Where(c => Mergeable(outlookContact, c));
         }
 
         /// <summary>

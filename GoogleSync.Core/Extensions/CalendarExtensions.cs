@@ -17,27 +17,22 @@ namespace DirkSarodnick.GoogleSync.Core.Extensions
     public static class CalendarExtensions
     {
         /// <summary>
-        /// Mergeables the specified outlook calendar item.
+        /// Determines wether the calendar items are mergable.
         /// </summary>
         /// <param name="outlookCalendarItem">The outlook calendar item.</param>
         /// <param name="googleCalendarItem">The google calendar item.</param>
         /// <returns>True or False.</returns>
         public static bool Mergeable(AppointmentItem outlookCalendarItem, EventEntry googleCalendarItem)
         {
-            var googleId = outlookCalendarItem.UserProperties.GetProperty("GoogleId");
-
-            if (string.IsNullOrWhiteSpace(googleId))
-            {
-                return googleCalendarItem.Times.Any(g => g.StartTime == outlookCalendarItem.Start && g.EndTime == outlookCalendarItem.End);
-            }
-
-            return googleId == googleCalendarItem.EventId;
+            return outlookCalendarItem.UserProperties.GetProperty("GoogleId") == googleCalendarItem.EventId ||
+                   (outlookCalendarItem.Subject == googleCalendarItem.Title.Text && googleCalendarItem.Locations.Any(l => l.ValueString == outlookCalendarItem.Location)) ||
+                   googleCalendarItem.Times.Any(g => g.StartTime == outlookCalendarItem.Start && g.EndTime == outlookCalendarItem.End);
         }
 
         #region Google > Outlook
 
         /// <summary>
-        /// Mergeables the specified calendar items.
+        /// Determines wether the calendar items are mergable.
         /// </summary>
         /// <param name="calendarItems">The calendar items.</param>
         /// <param name="calendarItem">The calendar item.</param>
@@ -272,7 +267,7 @@ namespace DirkSarodnick.GoogleSync.Core.Extensions
         #region Outlook > Google
 
         /// <summary>
-        /// Mergeables the specified calendar items.
+        /// Determines wether the calendar items are mergable.
         /// </summary>
         /// <param name="calendarItems">The calendar items.</param>
         /// <param name="calendarItem">The calendar item.</param>

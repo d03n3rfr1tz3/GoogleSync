@@ -94,7 +94,7 @@ namespace DirkSarodnick.GoogleSync.Core.Extensions
             result |= outlookContact.ApplyProperty(c => c.MailingAddressState, primaryMailAddress.Region);
 
             DateTime birth;
-            if (DateTime.TryParseExact(googleContact.ContactEntry.Birthday, DateFormats, CultureInfo.InvariantCulture, DateTimeStyles.None, out birth) && birth.Year > 1000 && birth.Year < 2500)
+            if (!string.IsNullOrEmpty(googleContact.ContactEntry.Birthday) && DateTime.TryParseExact(googleContact.ContactEntry.Birthday, DateFormats, CultureInfo.InvariantCulture, DateTimeStyles.None, out birth) && birth.Year > 1000 && birth.Year < 2500)
             {
                 result |= outlookContact.ApplyProperty(c => c.Birthday, birth);
             }
@@ -244,11 +244,11 @@ namespace DirkSarodnick.GoogleSync.Core.Extensions
                 googleContact.PostalAddresses.FirstOrInstance(p => outlookContact.MailingAddressStreet.StartsWith(p.Street) && p.City == outlookContact.MailingAddressCity && p.Country == outlookContact.MailingAddressCountry && p.Pobox == outlookContact.MailingAddressPostOfficeBox && p.Postcode == outlookContact.MailingAddressPostalCode && p.Region == outlookContact.MailingAddressState).Primary = true;
             }
 
-            if (outlookContact.Birthday != default(DateTime))
+            if (outlookContact.Birthday != default(DateTime) && outlookContact.Birthday.Year > 1000 && outlookContact.Birthday.Year < 2500)
             {
-                var birth = outlookContact.Birthday.Year == default(DateTime).Year || outlookContact.Birthday.Year < 1000 || outlookContact.Birthday.Year > 2500
-                                ? outlookContact.Birthday.ToString(DateFormats[1], CultureInfo.InvariantCulture)
-                                : outlookContact.Birthday.ToString(DateFormats[0], CultureInfo.InvariantCulture);
+                var birth = outlookContact.Birthday.Year == default(DateTime).Year
+                            ? outlookContact.Birthday.ToString(DateFormats[1], CultureInfo.InvariantCulture)
+                            : outlookContact.Birthday.ToString(DateFormats[0], CultureInfo.InvariantCulture);
                 result |= googleContact.ContactEntry.ApplyProperty(c => c.Birthday, birth);
             }
 

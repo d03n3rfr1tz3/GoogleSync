@@ -54,14 +54,14 @@ namespace DirkSarodnick.GoogleSync.Core.Data
         /// <returns>The Contacts.</returns>
         public IEnumerable<Contact> GetContacts()
         {
-            try
+            var result = this.ContactsRequest.GetContacts();
+
+            if (result.Entries != null)
             {
-                return this.ContactsRequest.GetContacts().Entries.ToList();
+                return result.Entries.ToList();
             }
-            catch (GDataRequestException)
-            {
-                return new List<Contact>();
-            }
+
+            return new List<Contact>();
         }
 
         /// <summary>
@@ -82,6 +82,7 @@ namespace DirkSarodnick.GoogleSync.Core.Data
         {
             var query = new EventQuery(ApplicationData.GoogleCalendarUri.ToString());
             var result = this.CalendarService.Query(query);
+
             if (result != null)
             {
                 return result.Entries.Cast<EventEntry>();
@@ -97,6 +98,7 @@ namespace DirkSarodnick.GoogleSync.Core.Data
         public IEnumerable<Group> GetGroups()
         {
             var response = ContactsRequest.GetGroups();
+
             if (response != null)
             {
                 return response.Entries.AsEnumerable();

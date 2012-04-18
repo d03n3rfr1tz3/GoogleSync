@@ -114,7 +114,7 @@ namespace DirkSarodnick.GoogleSync.Core.Sync.Calendar
 
                 try
                 {
-                    if (changed) this.Repository.GoogleData.CalendarService.Update(googleCalendarItem);
+                    if (changed) googleCalendarItem = this.Repository.GoogleData.CalendarService.Update(googleCalendarItem);
                 }
                 catch (GDataRequestException ex)
                 {

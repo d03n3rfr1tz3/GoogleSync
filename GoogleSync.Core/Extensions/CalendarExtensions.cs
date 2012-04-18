@@ -24,9 +24,13 @@ namespace DirkSarodnick.GoogleSync.Core.Extensions
         /// <returns>True or False.</returns>
         public static bool Mergeable(AppointmentItem outlookCalendarItem, EventEntry googleCalendarItem)
         {
-            return outlookCalendarItem.UserProperties.GetProperty("GoogleId") == googleCalendarItem.EventId ||
-                   (outlookCalendarItem.Subject.FormatSimple() == googleCalendarItem.Title.Text.FormatSimple() && outlookCalendarItem.Body.FormatSimple() == googleCalendarItem.Content.Content.FormatSimple()) ||
-                   googleCalendarItem.Times.Any(g => g.StartTime == outlookCalendarItem.Start && g.EndTime == outlookCalendarItem.End);
+            bool titleEquals = outlookCalendarItem.Subject.FormatSimple() == googleCalendarItem.Title.Text.FormatSimple();
+            bool contentEquals = outlookCalendarItem.Body.FormatSimple() == googleCalendarItem.Content.Content.FormatSimple() || googleCalendarItem.Locations.Any(l => l.ValueString.FormatSimple() == outlookCalendarItem.Location.FormatSimple());
+            bool titleAndContentEquals = titleEquals && contentEquals;
+            bool dateEquals = outlookCalendarItem.AllDayEvent && googleCalendarItem.Times.Any(g => g.AllDay && g.StartTime.Date == outlookCalendarItem.StartUTC.Date && g.EndTime.Date == outlookCalendarItem.EndUTC.Date);
+            bool timeEquals = googleCalendarItem.Times.Any(g => g.StartTime == outlookCalendarItem.Start && g.EndTime == outlookCalendarItem.End);
+
+            return outlookCalendarItem.UserProperties.GetProperty("GoogleId") == googleCalendarItem.EventId || (titleAndContentEquals && (dateEquals || timeEquals));
         }
 
         #region Google > Outlook

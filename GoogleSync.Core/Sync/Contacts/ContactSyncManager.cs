@@ -1,6 +1,7 @@
 ﻿
 namespace DirkSarodnick.GoogleSync.Core.Sync.Contacts
 {
+    using System;
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.IO;
@@ -167,6 +168,12 @@ namespace DirkSarodnick.GoogleSync.Core.Sync.Contacts
                     outlookChanged |= outlookContact.UserProperties.SetProperty("GooglePicture", googleContact.PhotoEtag);
                 }
                 catch (IOException ex)
+                {
+                    Debug.Write(ex.Message);
+                    new EventLogPermission(EventLogPermissionAccess.Administer, ".").PermitOnly();
+                    EventLog.WriteEntry("GoogleSync Addin", ex.ToString(), EventLogEntryType.Warning);
+                }
+                catch (UnauthorizedAccessException ex)
                 {
                     Debug.Write(ex.Message);
                     new EventLogPermission(EventLogPermissionAccess.Administer, ".").PermitOnly();

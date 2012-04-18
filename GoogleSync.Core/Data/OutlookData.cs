@@ -54,7 +54,7 @@ namespace DirkSarodnick.GoogleSync.Core.Data
         public IEnumerable<AppointmentItem> GetCalendarItems()
         {
             var items = ApplicationData.Application.Session.GetDefaultFolder(OlDefaultFolders.olFolderCalendar).Items;
-            return items.Cast<AppointmentItem>();
+            return items.Cast<AppointmentItem>().Where(o => o.RecurrenceState == OlRecurrenceState.olApptNotRecurring || o.RecurrenceState == OlRecurrenceState.olApptMaster);
         }
     }
 }
